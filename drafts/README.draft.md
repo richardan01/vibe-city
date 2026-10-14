@@ -8,7 +8,7 @@ Prefer to skip the game? Click **Skip to the résumé** on the title screen, or 
 
 ## Chapters
 
-HPE → Huawei → Informatica (with a freelance Web3 side quest at Animoca) → Axi → KPay → what's next. Each stop is a mission card with the real scope, the numbers and what I took from it. Plus the origin story (Coventry), the builder's garage, and the Eval Lab on Prompt Island: open-source agent evals that caught their own contaminated test set.
+HPE → Huawei → Informatica (with a freelance Web3 side quest at Animoca) → Axi → KPay → what's next. Each stop is a mission card with the real scope, the numbers and what I took from it. Plus the origin story (Coventry), the builder's garage, and the Eval Lab on Prompt Island: an open-source lab that grades real Claude Code and Codex agent sessions, plus RegEval, an LLM-as-judge case study where the lab found its own held-out set was contaminated, invalidated the claim and rebuilt the measurement. (The held-out data is private, so that historical score isn't reproducible from the repo.)
 
 ## Controls
 
@@ -25,7 +25,7 @@ HPE → Huawei → Informatica (with a freelance Web3 side quest at Animoca) →
 | `Esc` / `P` | Pause (`Esc` also closes a mission card or overlay) |
 | `Enter` | Start / skip intro (`Space` also skips the intro) |
 
-- **Gamepad:** left stick steers, RT/LT or A throttle, RB drift, B horn. Menus and mission cards need keyboard, mouse or touch.
+- **Gamepad:** left stick steers, RT or A accelerates, LT brakes/reverses, RB drift, B horn. Menus and mission cards need keyboard, mouse or touch.
 - **Touch:** drag anywhere on the left side to drive, use the DRIFT and HORN buttons, and tap the HUD buttons for taxi, radio, map, résumé and pause.
 
 ## For developers
@@ -46,7 +46,7 @@ The radio stations are synthesized live in the browser with Web Audio. The VCPR 
 
 ### Editing the content
 
-Chapter, résumé and radio-script content lives in [`js/data.js`](js/data.js). Edit it and refresh; use `**double asterisks**` to highlight a metric. Page metadata, the title-screen copy and the noscript fallback are in `index.html`, and the intro text and education line are in `js/game.js`, so update those too when your details change.
+Chapter, résumé and radio-script content lives in [`js/data.js`](js/data.js). Edit it and refresh; use `**double asterisks**` to highlight a metric. Page metadata, the title-screen copy and the noscript fallback are in `index.html`, and the intro text, map district labels and education line are in `js/game.js`, so update those too when your details change.
 
 ### Structure
 
@@ -67,7 +67,7 @@ music/          optional local MP3 for Flash FM (git- and Vercel-ignored)
 
 ### Deploy
 
-Static site: deploy the repo root. On Vercel, `.vercelignore` keeps `music/` out; on any other host, exclude `music/` yourself.
+Static site: deploy the repo root. On Vercel, `.vercelignore` keeps `music/` out; git-based deploys exclude it via `.gitignore`; if you upload a local folder any other way, exclude `music/` yourself.
 
 ## Legal
 
