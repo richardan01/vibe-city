@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no" />
+  <title>Vibe City — Richard “Richie” Ng · The road to AI PM</title>
+  <meta name="description" content="Drive through Vibe City, an 80s neon open world, to explore Richard Ng's 12-year journey from infrastructure to AI product management." />
+  <meta property="og:title" content="Vibe City — The road to AI PM" />
+  <meta property="og:description" content="An open-world driving game about Richard “Richie” Ng's journey: HPE → Huawei → Informatica → Axi → KPay → the frontier." />
+  <meta name="theme-color" content="#1a0533" />
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <canvas id="game" aria-label="Vibe City game world"></canvas>
+
+  <!-- HUD -->
+  <div id="hud" aria-hidden="true">
+    <div id="hud-tr">
+      <div id="clock">18:36</div>
+      <div id="stars"></div>
+      <div id="chapters">CHAPTERS 0/9</div>
+      <div id="pkgs">PACKAGES 0/12</div>
+    </div>
+    <div id="help"></div>
+    <div id="station"></div>
+    <div id="caption"></div>
+    <canvas id="radar"></canvas>
+    <div id="speed">0 MPH</div>
+    <div id="zone"></div>
+    <div id="objective"></div>
+    <div id="hud-buttons">
+      <button id="h-taxi" title="Taxi (T)">🚕<span>Taxi</span></button>
+      <button id="h-radio" title="Radio (R)">📻<span>Radio</span></button>
+      <button id="h-map" title="Map (M)">🗺️<span>Map</span></button>
+      <button id="h-cv" title="Résumé (Tab)">📄<span>Résumé</span></button>
+      <button id="h-pause" title="Pause (Esc)">⏸<span>Pause</span></button>
+    </div>
+  </div>
+  <div id="pager"><div class="pager-body"><div class="pager-label">PAGER</div><div class="lcd"></div></div></div>
+  <div id="big"></div>
+  <div id="toast"></div>
+  <div id="letterbox"><div></div><div></div></div>
+  <div id="fade"></div>
+
+  <!-- touch -->
+  <div id="touch">
+    <div id="touch-stick"></div>
+    <div id="stick"><div></div></div>
+    <button id="t-drift">DRIFT</button>
+    <button id="t-horn">HORN</button>
+  </div>
+
+  <!-- mission card -->
+  <div id="card" role="dialog" aria-modal="true" aria-label="Chapter"></div>
+
+  <!-- title -->
+  <div id="title" class="overlay">
+    <div class="sunset">
+      <div class="sun"></div>
+      <div class="sea"></div>
+      <svg class="skyline" viewBox="0 0 1200 200" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0 200V150h40v-30h30v40h25V90h40v70h20v-50h35v60h30V60h20V40h10v20h20v100h30v-70h45v80h25V120h30v-40h40v90h30v-60h35v70h25V70h15V30h20v40h15v100h40v-80h30v60h25v-90h45v110h30v-50h30v60h20V100h40v70h35v-40h30v50h40V80h25v100h35v-60h45v70h20v-40h40v50h50v30z" fill="#1b0630"/>
+      </svg>
+      <svg class="palm p1" viewBox="0 0 200 400" aria-hidden="true"><path d="M100 400 C96 300 92 220 104 120" stroke="#12021f" stroke-width="12" fill="none"/><path d="M104 120 C60 80 20 90 0 120 C40 95 70 100 104 122Z M104 120 C150 70 185 85 200 110 C160 92 135 100 104 122Z M104 120 C90 60 60 30 30 25 C70 45 88 75 104 122Z M104 120 C125 55 160 35 185 35 C150 55 128 80 104 122Z M104 120 C70 120 40 150 30 185 C55 150 80 135 104 122Z M104 120 C140 125 170 150 178 190 C155 155 130 138 104 122Z" fill="#12021f"/></svg>
+      <svg class="palm p2" viewBox="0 0 200 400" aria-hidden="true"><use href="#none"/><path d="M100 400 C104 300 110 220 96 120" stroke="#12021f" stroke-width="12" fill="none"/><path d="M96 120 C52 80 12 90 -8 120 C32 95 62 100 96 122Z M96 120 C142 70 177 85 192 110 C152 92 127 100 96 122Z M96 120 C82 60 52 30 22 25 C62 45 80 75 96 122Z M96 120 C117 55 152 35 177 35 C142 55 120 80 96 122Z M96 120 C62 120 32 150 22 185 C47 150 72 135 96 122Z" fill="#12021f"/></svg>
+    </div>
+    <div class="title-content">
+      <div class="logo">
+        <div class="logo-boxes"><span>THE</span><span>ROAD TO</span><span>AI PM</span></div>
+        <div class="logo-script">Vibe City</div>
+        <div class="logo-star">starring <b>RICHARD “RICHIE” NG</b></div>
+      </div>
+      <p class="pitch">12+ years building the layer underneath great products, from data centers to GenAI. Drive the city to unlock each chapter.</p>
+      <div class="menu">
+        <button class="btn primary" id="btn-start">▶ Start the drive</button>
+        <button class="btn" id="btn-resume-mode">📄 Skip to the résumé</button>
+        <div class="menu-row"><button class="btn small" id="btn-sound">Sound: ON</button><button class="btn small" id="btn-reset">Reset progress</button></div>
+      </div>
+      <div class="controls-hint">
+        <span><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> drive</span><span><kbd>Space</kbd> drift</span><span><kbd>R</kbd> radio</span><span><kbd>T</kbd> taxi</span><span><kbd>M</kbd> map</span><span><kbd>Tab</kbd> résumé</span>
+      </div>
+      <p class="legal" id="legal">A fan-made homage to the 1980s and open-world games. All music is original and generated live in your browser. Not affiliated with Rockstar Games.</p>
+    </div>
+  </div>
+
+  <!-- pause -->
+  <div id="pause" class="overlay panel-overlay">
+    <div class="panel">
+      <h2 class="script">Paused</h2>
+      <div class="pause-menu">
+        <button class="btn primary" id="p-resume">Resume</button>
+        <button class="btn" id="p-map">Map</button>
+        <button class="btn" id="p-taxi">Taxi (fast travel)</button>
+        <button class="btn" id="p-dossier">Résumé</button>
+        <button class="btn" id="p-sound">Toggle sound</button>
+        <label class="vol">Radio volume <input id="vol" type="range" min="0" max="100" value="75" /></label>
+        <button class="btn small" id="p-reset">Reset progress</button>
+      </div>
+      <div class="pause-keys"><kbd>W A S D</kbd> drive · <kbd>Space</kbd> handbrake · <kbd>H</kbd> horn · <kbd>R</kbd> / <kbd>Shift+R</kbd> radio · <kbd>N</kbd> mute · <kbd>T</kbd> taxi · <kbd>M</kbd> map · <kbd>Tab</kbd> résumé</div>
+    </div>
+  </div>
+
+  <!-- taxi -->
+  <div id="taxi" class="overlay panel-overlay">
+    <div class="panel">
+      <button class="close" data-close aria-label="Close">✕</button>
+      <h2 class="script">Vibe Cabs</h2>
+      <p class="panel-sub">Where to, boss?</p>
+      <div id="taxi-list"></div>
+    </div>
+  </div>
+
+  <!-- map -->
+  <div id="map" class="overlay panel-overlay">
+    <div class="panel wide">
+      <button class="close" data-close aria-label="Close">✕</button>
+      <h2 class="script">Vibe City</h2>
+      <p class="panel-sub">Click a marker to take a cab there.</p>
+      <div class="map-wrap"><canvas id="map-canvas"></canvas></div>
+    </div>
+  </div>
+
+  <!-- résumé / dossier -->
+  <div id="dossier" class="overlay panel-overlay">
+    <div class="panel wide">
+      <button class="close" data-close aria-label="Close">✕</button>
+      <div class="scroll"><div id="dossier-body"></div></div>
+    </div>
+  </div>
+
+  <!-- loading -->
+  <div id="loading"><div class="script">Vibe City</div><div class="load-track"><div id="load-bar"></div></div><div class="load-tip">Tip: every pink marker is a chapter of Richie's career.</div></div>
+
+  <noscript>
+    <div style="padding:24px;font-family:sans-serif;color:#fff;background:#1a0533">
+      <h1>Richard “Richie” Ng — Martech AI Product Manager</h1>
+      <p>12+ years across HPE, Huawei, Informatica, Animoca Brands, Axi and KPay. This site is an interactive game and needs JavaScript.</p>
+      <p><a style="color:#ff8fd0" href="https://www.linkedin.com/in/richieriri/">LinkedIn</a> · <a style="color:#ff8fd0" href="https://github.com/richardan01">GitHub</a></p>
+    </div>
+  </noscript>
+
+  <script src="js/util.js"></script>
+  <script src="js/data.js"></script>
+  <script src="js/world.js"></script>
+  <script src="js/audio.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
