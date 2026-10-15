@@ -126,8 +126,18 @@ blockquote cite { display: block; margin-top: 4px; font-style: normal; font-size
 .taxi-item small { opacity: .7; font-size: 12px; }
 .taxi-item em { font: 700 14px var(--display); font-style: normal; color: var(--gold); }
 .taxi-item.done em { color: #7cff6b; }
-.map-wrap { width: 100%; height: min(64vh, 640px); display: flex; align-items: center; justify-content: center; }
-#map-canvas { border-radius: 8px; cursor: pointer; box-shadow: 0 0 0 2px rgba(255,255,255,.2); }
+.taxi-row { display: flex; gap: 6px; }
+.taxi-row .taxi-item { flex: 1; }
+.taxi-gps { flex: none; padding: 0 12px; border: 1px solid rgba(255,255,255,.18); border-radius: 10px; background: rgba(255,255,255,.04); font: 700 14px var(--display); letter-spacing: .5px; color: #d9a8ff; }
+.taxi-gps:hover:not([disabled]) { border-color: #c77dff; background: rgba(199,125,255,.15); }
+.taxi-gps[disabled] { opacity: .45; cursor: not-allowed; }
+.map-wrap { position: relative; width: 100%; height: min(64vh, 640px); display: flex; align-items: center; justify-content: center; }
+#map-canvas { border-radius: 8px; cursor: crosshair; box-shadow: 0 0 0 2px rgba(255,255,255,.2); }
+#map-pick { position: absolute; display: none; min-width: 200px; padding: 10px; border: 2px solid var(--pink); border-radius: 10px; background: var(--panel); box-shadow: 0 8px 24px rgba(0,0,0,.5); transform: translate(-50%, 14px); z-index: 2; }
+#map-pick.show { display: grid; gap: 6px; }
+#map-pick b { font: 700 17px var(--display); letter-spacing: .5px; text-align: center; }
+#map-pick .btn { font-size: 15px; padding: 8px 10px; }
+#map-pick .btn:hover { transform: none; }
 
 /* ---------- dossier ---------- */
 #dossier .panel { padding: 0; }
@@ -189,6 +199,7 @@ body.cinematic #pager { opacity: 0; }
 #t-horn { right: 118px; bottom: 104px; width: 64px; height: 64px; font-size: 12px; }
 body.touch #hud-buttons button { width: 46px; height: 46px; }
 body.touch #hud-buttons button span { display: none; }
+@media (max-width: 420px) { body.touch #hud-buttons { right: 8px; gap: 4px; } body.touch #hud-buttons button { width: 38px; height: 38px; font-size: 17px; } }
 
 @media (max-width: 640px) {
   #clock { font-size: 30px; } #stars { font-size: 20px; } #chapters { font-size: 16px; } #pkgs { font-size: 13px; }
